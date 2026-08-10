@@ -13,26 +13,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
 
       - name: Install Dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+          pnpm add -D -w @electron-forge/maker-squirrel @electron-forge/maker-zip
 
       - name: Build Project
         run: pnpm build
 
-      - name: Make Executable
-        run: pnpm --filter deemix-gui make || pnpm make || pnpm package
+      - name: Package Application
+        run: pnpm --filter deemix-gui package
 
       - name: Upload Executable Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Deemix-Portable-Windows
-          path: |
-            out/**/*.exe
-            dist/*.exe
-            build/*.exe
-            packages/**/*.exe
+          path: packages/gui/out/
